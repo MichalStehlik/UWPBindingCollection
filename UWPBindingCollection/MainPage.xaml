@@ -1,0 +1,59 @@
+﻿<Page
+    x:Class="UWPBindingCollection.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:UWPBindingCollection"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewmodel="using:UWPBindingCollection.ViewModels"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Page.DataContext>
+        <viewmodel:MainViewModel />
+    </Page.DataContext>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <CommandBar Grid.ColumnSpan="2" IsOpen="True" ClosedDisplayMode="Compact" DefaultLabelPosition="Right" VerticalAlignment="Top">
+            <AppBarButton Label="Add" Command="{Binding AddPredefined}" Icon="Add"/>
+            <AppBarButton Label="Balance" Command="{Binding BalanceAverage}" Icon="Account"/>
+        </CommandBar>
+        <GridView Grid.Row="1" ItemsSource="{Binding Students}" SelectedIndex="{Binding SelectedIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedStudent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            <GridView.ItemTemplate>
+                <DataTemplate>
+                    <Grid HorizontalAlignment="Stretch">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="30" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="30" />
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="1" Text="{Binding Firstname, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBox Grid.Column="2" Text="{Binding Lastname, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBox Grid.Column="3"  Text="{Binding Average, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <CheckBox Grid.Column="4" IsChecked="{Binding Path=Examined, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="5" />
+                    </Grid>
+                </DataTemplate>
+            </GridView.ItemTemplate>
+        </GridView>
+        <StackPanel Grid.Column="1" Grid.Row="1">
+            <TextBlock Text="Firstname" TextWrapping="Wrap"/>
+            <TextBox Text="{Binding SelectedStudent.Firstname, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap"/>
+            <TextBlock Text="Lastname" TextWrapping="Wrap"/>
+            <TextBox Text="{Binding SelectedStudent.Lastname, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap"/>
+            <TextBlock Text="Average" TextWrapping="Wrap"/>
+            <Slider Value="{Binding SelectedStudent.Average, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Minimum="1" Maximum="5" />
+            <CheckBox IsChecked="{Binding Path=SelectedStudent.Examined, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="5" VerticalAlignment="Center">Examined</CheckBox>
+            <TextBlock Text="Gender" TextWrapping="Wrap"/>
+            <ComboBox SelectedItem="{Binding SelectedStudent.Gender}" ItemsSource="{Binding Genders}" HorizontalAlignment="Stretch"/>
+        </StackPanel>
+
+    </Grid>
+</Page>
