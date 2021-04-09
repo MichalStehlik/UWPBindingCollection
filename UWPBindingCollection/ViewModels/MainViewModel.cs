@@ -18,12 +18,14 @@ namespace UWPBindingCollection.ViewModels
 
         public ObservableCollection<Student> Students { get { return _students; } set { _students = value; NotifyPropertyChanged(); } }
         public int? SelectedIndex { get { return _selectedIndex; } set { _selectedIndex = value; NotifyPropertyChanged(); } }
-        public Student SelectedStudent { get { return _selectedStudent; } set { _selectedStudent = value; NotifyPropertyChanged(); } }
+        public Student SelectedStudent { get { return _selectedStudent; } set { _selectedStudent = value; NotifyPropertyChanged(); Remove.RaiseCanExecuteChanged(); } }
 
         public IEnumerable<Gender> Genders{ get { return Enum.GetValues(typeof(Gender)).Cast<Gender>(); } }
 
         public RelayCommand AddPredefined { get; set; }
         public RelayCommand BalanceAverage { get; set; }
+        public RelayCommand Remove { get; set; }
+        public ParametrizedRelayCommand RemoveAt { get; set; }
 
         public MainViewModel()
         {
@@ -37,6 +39,19 @@ namespace UWPBindingCollection.ViewModels
             BalanceAverage = new RelayCommand(
                 () => { foreach (var s in Students) { s.Average = 5; }; },
                 () => true
+            );
+            Remove = new RelayCommand(
+                () => Students.Remove(SelectedStudent),
+                () => { return SelectedStudent != null; }
+            );
+            RemoveAt = new ParametrizedRelayCommand(
+                (param) => {
+                    if (param is Student)
+                    {
+                        Students.Remove(param as Student);
+                    }        
+                },
+                () => { return true; }
             );
         }
 

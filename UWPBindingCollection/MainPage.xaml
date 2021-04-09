@@ -11,6 +11,20 @@
     <Page.DataContext>
         <viewmodel:MainViewModel />
     </Page.DataContext>
+    <Page.Resources>
+        <Style TargetType="Button">
+            <Setter Property="FontSize" Value="24" />
+        </Style>
+        <Style x:Key="DeleteButton" TargetType="Button">
+            <Setter Property="Background" Value="Red" />
+            <Setter Property="Foreground" Value="White" />
+        </Style>
+        <ControlTemplate x:Key="DeleteButton2" TargetType="Button">
+            <Border CornerRadius="5" BorderThickness="1" Background="{StaticResource ButtonBackgroundThemeBrush}" Padding="3">
+                <ContentPresenter Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </Border>
+        </ControlTemplate>
+    </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="40"/>
@@ -23,27 +37,30 @@
         <CommandBar Grid.ColumnSpan="2" IsOpen="True" ClosedDisplayMode="Compact" DefaultLabelPosition="Right" VerticalAlignment="Top">
             <AppBarButton Label="Add" Command="{Binding AddPredefined}" Icon="Add"/>
             <AppBarButton Label="Balance" Command="{Binding BalanceAverage}" Icon="Account"/>
+            <AppBarButton Label="Delete" Command="{Binding Remove}" Icon="Delete" />
         </CommandBar>
-        <GridView Grid.Row="1" ItemsSource="{Binding Students}" SelectedIndex="{Binding SelectedIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedStudent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-            <GridView.ItemTemplate>
+        <ListBox x:Name="lbData" HorizontalContentAlignment="Stretch" Grid.Row="1" ItemsSource="{Binding Students}" SelectedIndex="{Binding SelectedIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding SelectedStudent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <Grid HorizontalAlignment="Stretch">
+                    <Grid >
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="30" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="100" />
+                            <ColumnDefinition Width="100" />
+                            <ColumnDefinition Width="100" />
                             <ColumnDefinition Width="30" />
+                            <ColumnDefinition Width="70" />
                         </Grid.ColumnDefinitions>
                         <TextBox Grid.Column="1" Text="{Binding Firstname, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         <TextBox Grid.Column="2" Text="{Binding Lastname, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         <TextBox Grid.Column="3"  Text="{Binding Average, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         <CheckBox Grid.Column="4" IsChecked="{Binding Path=Examined, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="5" />
+                        <Button x:Name="dataList" Content="Delete" Grid.Column="5" Style="{StaticResource DeleteButton}" Command="{ Binding ElementName=lbData, Path=DataContext.RemoveAt}" CommandParameter="{Binding}" Template="{StaticResource DeleteButton2}"/>
                     </Grid>
                 </DataTemplate>
-            </GridView.ItemTemplate>
-        </GridView>
-        <StackPanel Grid.Column="1" Grid.Row="1">
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <StackPanel Grid.Column="1" Grid.Row="1" Margin="10">
             <TextBlock Text="Firstname" TextWrapping="Wrap"/>
             <TextBox Text="{Binding SelectedStudent.Firstname, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap"/>
             <TextBlock Text="Lastname" TextWrapping="Wrap"/>
